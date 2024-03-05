@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  blockchain:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
