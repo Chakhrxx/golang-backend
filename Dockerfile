@@ -1,29 +1,18 @@
-# Use the official Golang image as the base image
-FROM golang:1.17 as builder
+# Use a base image with Go installed
+FROM golang:latest as develop
 
-# Set the working directory to /app
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the go.mod and go.sum files to the working directory
-COPY go.mod go.sum ./
+# Copy the source code into the container
+COPY ./app .
+COPY go.mod go.sum /app/
 
-# Install the dependencies
-RUN go mod download
-
-# Copy the source code to the working directory
-COPY *.go ./
-
-# Build the Go binary
+# Build the Go application
 RUN go build -o main .
 
-# Create a new stage for running the app
-FROM alpine:3.14
+# Expose the port your Go application listens on
+EXPOSE 8080
 
-# Set the working directory to /app
-WORKDIR /app
-
-# Copy the main binary to the working directory
-COPY --from=builder /app/main /app
-
-# Set the default command to run the app
-CMD ["/app/main"]
+# Command to run the executable
+CMD ["./main"]
